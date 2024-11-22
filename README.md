@@ -3,6 +3,8 @@
 A modern ESM module for interactive SVG visualization of Graphviz graphs.
 This is a modernized rewrite of [jquery.graphviz.svg](https://github.com/mountainstorm/jquery.graphviz.svg).
 
+https://github.com/user-attachments/assets/7371d1e6-a195-4e73-8670-3e5f8965ae53
+
 ## Features
 
 * 🎯 Interactive SVG visualization of Graphviz graphs
