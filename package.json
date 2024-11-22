@@ -1,16 +1,33 @@
 {
   "name": "graphvizsvg",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "description": "A modern ESM module for interactive SVG visualization of Graphviz graphs.",
+  "main": "static/index.js",
+  "module": "static/index.js",
+  "files": [
+    "static/"
+  ],
   "scripts": {
     "test": "jest --config jest.config.js --coverage",
     "build": "esbuild src/index.js --minify --format=esm --bundle --outdir=static",
-    "dev": "npm run build -- --sourcemap=inline --watch"
+    "dev": "npm run build -- --sourcemap=inline --watch",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "graphviz",
+    "svg",
+    "interactive",
+    "visualization",
+    "graph",
+    "esm",
+    "module"
+  ],
+  "author": "Bas Nijholt",
   "license": "MIT",
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pipefunc/graphvizsvg.git"
+  },
   "devDependencies": {
     "@babel/core": "^7.25.7",
     "@babel/preset-env": "^7.25.7",
