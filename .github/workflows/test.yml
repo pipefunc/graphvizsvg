@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [ main ] # Or your default branch
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x] # Or your preferred Node.js versions
+        node-version: [23.x]
 
     steps:
     - uses: actions/checkout@v3
