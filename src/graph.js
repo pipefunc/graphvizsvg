@@ -7,7 +7,7 @@ export function linkedTo(node, includeEdges, context) {
     node,
     includeEdges,
     (nodeName, edgeName) => {
-      let other = null;
+      const other = null;
       const connection = edgeName.split("->");
       if (
         connection.length > 1 &&
@@ -29,7 +29,7 @@ export function linkedFrom(node, includeEdges, context) {
     node,
     includeEdges,
     (nodeName, edgeName) => {
-      let other = null;
+      const other = null;
       const connection = edgeName.split("->");
       if (
         connection.length > 1 &&
