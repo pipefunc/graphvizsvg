@@ -12,7 +12,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Runtime data
 pids
 *.pid
-*.seed   
+*.seed  
 
 *.pid.lock
 
@@ -40,7 +40,7 @@ build/Release
 
 # Dependency directories
 node_modules/
-jspm_packages/   
+jspm_packages/  
 
 
 # TypeScript v1 declaration files
@@ -57,7 +57,7 @@ typings/
 
 # Microbundle cache
 .rpt2_cache/
-.rts2_cache/   
+.rts2_cache/  
 
 
 # Optional REPL history
@@ -75,7 +75,7 @@ typings/
 .env.production
 
 # parcel-bundler cache (https://parceljs.org/)
-.cache   
+.cache  
 
 
 # Next.js build output
@@ -87,13 +87,13 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby   
+# Comment in the public line in if your project uses Gatsby  
  and *not* Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
 # vuepress build output
-.vuepress/dist   
+.vuepress/dist  
 
 
 # Serverless directories
@@ -113,7 +113,7 @@ dist
 
 # yarn v2
 .yarn/cache
-.yarn/unplugged   
+.yarn/unplugged  
 
 
 # vitejs dev server speeds up development
