@@ -23,6 +23,11 @@ npm install graphvizsvg
 
 ## Usage
 
+See [demo.html](demo.html) for a complete example.
+Run `python -m http.server` in the project root and open `http://localhost:8000/demo.html` in your browser.
+
+Or see the example below:
+
 ```javascript
 import GraphvizSvg from 'graphvizsvg';
 
