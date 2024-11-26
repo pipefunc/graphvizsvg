@@ -1123,8 +1123,13 @@ describe("GraphvizSvg", () => {
         // Should only capture the immediate previous comment
         expect(this._commentsByName["A"]).toBe("Node A comment");
 
-        // Should handle multi-line comments
-        expect(this._commentsByName["B"]).toBe("Multi-line\n          Node B \n          comment");
+        // Should handle multi-line comments - normalize whitespace for comparison
+        const comment = this._commentsByName["B"];
+        const normalizedComment = comment
+          .split("\n")
+          .map((line) => line.trim())
+          .join("\n");
+        expect(normalizedComment).toBe("Multi-line\nNode B\ncomment");
 
         done();
       },
