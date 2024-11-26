@@ -1,5 +1,5 @@
 // setup.js
-import $ from 'jquery';
+import $ from "jquery";
 
 export function setup(context) {
   const options = context.options;
@@ -14,6 +14,7 @@ export function setup(context) {
   context.$edges = $graph.children(".edge");
   context._nodesByName = {};
   context._edgesByName = {};
+  context._commentsByName = {};
 
   // Add top-level class and copy background color to element
   context.$element.addClass("graphviz-svg");
@@ -24,6 +25,16 @@ export function setup(context) {
   // Setup all the nodes and edges
   context.$nodes.each((_, el) => _setupNodesEdges($(el), true, context));
   context.$edges.each((_, el) => _setupNodesEdges($(el), false, context));
+
+  // After setting up nodes, collect comments
+  context.$nodes.each((_, node) => {
+    const $node = $(node);
+    const name = $node.attr("data-name");
+    const comment = $node.attr("data-comment");
+    if (comment) {
+      context._commentsByName[name] = comment;
+    }
+  });
 
   // Remove the graph title element
   const $title = context.$graph.children("title");
@@ -68,19 +79,21 @@ function _setupNodesEdges($el, isNode, context) {
     }
     // Check for user-added comments
     let previousSibling = $el[0].previousSibling;
-    while (previousSibling && previousSibling.nodeType !== 8) {
+    while (previousSibling && previousSibling.nodeType === 3) {
+      // Skip text nodes
       previousSibling = previousSibling.previousSibling;
     }
+
     if (previousSibling && previousSibling.nodeType === 8) {
-      const htmlDecode = (input) => {
-        const e = document.createElement("div");
-        e.innerHTML = input;
-        return e.childNodes[0].nodeValue;
-      };
-      const value = htmlDecode(previousSibling.nodeValue.trim());
+      // 8 is comment node
+      const value = previousSibling.nodeValue.trim();
+      console.log("Found comment:", value);
       if (value !== title) {
         // User-added comment
         $el.attr("data-comment", value);
+        if (isNode) {
+          context._commentsByName[title] = value;
+        }
       }
     }
   }
