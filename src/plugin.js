@@ -10,9 +10,35 @@ function Plugin(option) {
     let data = $this.data("graphviz.svg");
     const options = typeof option === "object" && option;
 
-    if (!data && /destroy/.test(option)) return;
-    if (!data) $this.data("graphviz.svg", (data = new GraphvizSvg(this, options)));
-    if (typeof option === "string") data[option]();
+    try {
+      // Check for destroy call on non-existent instance
+      if (!data && /destroy/.test(option)) return;
+
+      // Initialize new instance
+      if (!data) {
+        try {
+          data = new GraphvizSvg(this, options);
+          $this.data("graphviz.svg", data);
+        } catch (initError) {
+          console.error("GraphvizSvg: Failed to initialize:", initError);
+          // Clean up any partial initialization
+          $this.removeData("graphviz.svg");
+          throw initError;
+        }
+      }
+
+      // Handle method calls
+      if (typeof option === "string") {
+        if (typeof data[option] !== "function") {
+          throw new Error(`GraphvizSvg: Method '${option}' does not exist`);
+        }
+        data[option]();
+      }
+    } catch (error) {
+      console.error("GraphvizSvg plugin error:", error);
+      // Re-throw error to maintain existing behavior
+      throw error;
+    }
   });
 }
 
