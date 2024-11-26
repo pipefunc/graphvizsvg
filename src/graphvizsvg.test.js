@@ -1007,4 +1007,167 @@ describe("GraphvizSvg", () => {
     graphviz.tooltip(node, false);
     expect(link.attr("data-tooltip-keepvisible")).toBeUndefined();
   });
+
+  test("should handle node comments", (done) => {
+    const svgContent = `
+    <svg width="100pt" height="100pt">
+      <g>
+        <!-- User comment for A -->
+        <g class="node">
+          <title>A</title>
+          <ellipse cx="50" cy="50" rx="30" ry="30"/>
+        </g>
+        <!-- Another comment for B -->
+        <g class="node">
+          <title>B</title>
+          <ellipse cx="150" cy="50" rx="30" ry="30"/>
+        </g>
+        <g class="node">
+          <title>C</title>
+          <ellipse cx="250" cy="50" rx="30" ry="30"/>
+        </g>
+      </g>
+    </svg>`;
+
+    const options = {
+      svg: svgContent,
+      ready() {
+        // Debug output
+        console.log("Comments map:", this._commentsByName);
+        console.log("Node C:", $(this._nodesByName["C"]).attr("data-comment"));
+
+        // Original test assertions
+        expect(this._commentsByName["A"]).toBe("User comment for A");
+        expect(this._commentsByName["B"]).toBe("Another comment for B");
+        expect(this._commentsByName["C"]).toBeUndefined();
+
+        done();
+      },
+    };
+
+    container.graphviz(options);
+  });
+
+  test("should handle comments on nodes, edges and clusters", (done) => {
+    const svgContent = `
+    <svg width="100pt" height="100pt">
+      <g>
+        <!-- Node A comment -->
+        <g class="node">
+          <title>A</title>
+          <ellipse cx="50" cy="50" rx="30" ry="30"/>
+        </g>
+        <!-- Node B comment -->
+        <g class="node">
+          <title>B</title>
+          <ellipse cx="150" cy="50" rx="30" ry="30"/>
+        </g>
+        <!-- Edge A->B comment -->
+        <g class="edge">
+          <title>A->B</title>
+          <path d="M50,50 L150,50"/>
+        </g>
+      </g>
+    </svg>`;
+
+    const options = {
+      svg: svgContent,
+      ready() {
+        // Test node comments
+        expect(this._commentsByName["A"]).toBe("Node A comment");
+        expect(this._commentsByName["B"]).toBe("Node B comment");
+
+        // Test node data-comment attributes
+        const nodeA = $(this._nodesByName["A"]);
+        const nodeB = $(this._nodesByName["B"]);
+        expect(nodeA.attr("data-comment")).toBe("Node A comment");
+        expect(nodeB.attr("data-comment")).toBe("Node B comment");
+
+        // Test edge comments
+        const edge = $('g.edge[data-name="A->B"]');
+        expect(edge.attr("data-comment")).toBe("Edge A->B comment");
+
+        done();
+      },
+    };
+
+    container.graphviz(options);
+  });
+
+  test("should handle multiple comments and whitespace", (done) => {
+    const svgContent = `
+    <svg width="100pt" height="100pt">
+      <g>
+        <!-- First comment -->
+        <!-- Node A comment -->
+        <g class="node">
+          <title>A</title>
+          <ellipse cx="50" cy="50" rx="30" ry="30"/>
+        </g>
+
+        <!--
+          Multi-line
+          Node B
+          comment
+        -->
+        <g class="node">
+          <title>B</title>
+          <ellipse cx="150" cy="50" rx="30" ry="30"/>
+        </g>
+      </g>
+    </svg>`;
+
+    const options = {
+      svg: svgContent,
+      ready() {
+        // Should only capture the immediate previous comment
+        expect(this._commentsByName["A"]).toBe("Node A comment");
+
+        // Should handle multi-line comments - normalize whitespace for comparison
+        const comment = this._commentsByName["B"];
+        const normalizedComment = comment
+          .split("\n")
+          .map((line) => line.trim())
+          .join("\n");
+        expect(normalizedComment).toBe("Multi-line\nNode B\ncomment");
+
+        done();
+      },
+    };
+
+    container.graphviz(options);
+  });
+
+  test("should handle nodes without comments", (done) => {
+    const svgContent = `
+    <svg width="100pt" height="100pt">
+      <g>
+        <!-- Node A comment -->
+        <g class="node">
+          <title>A</title>
+          <ellipse cx="50" cy="50" rx="30" ry="30"/>
+        </g>
+        <g class="node">
+          <title>B</title>
+          <ellipse cx="150" cy="50" rx="30" ry="30"/>
+        </g>
+      </g>
+    </svg>`;
+
+    const options = {
+      svg: svgContent,
+      ready() {
+        // Node A should have a comment
+        expect(this._commentsByName["A"]).toBe("Node A comment");
+
+        // Node B should not have a comment
+        expect(this._commentsByName["B"]).toBeUndefined();
+        expect($(this._nodesByName["B"]).attr("data-comment")).toBeUndefined();
+
+        done();
+      },
+    };
+
+    container.graphviz(options);
+  });
 });
